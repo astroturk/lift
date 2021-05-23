@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:lift/login_screen.dart';
-import 'package:lift/registration_screen.dart';
+import 'package:lift/screens/login_screen.dart';
+import 'package:lift/screens/registration_screen.dart';
 import 'package:lift/components/navigation_button.dart';
 
 class AuthenticationScreen extends StatefulWidget {
@@ -108,9 +108,6 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> with Single
                     },
                     text: 'Login',
                     textColor: Colors.white,
-                  ),
-                  SizedBox(
-                    height: 5.0,
                   ),
                   NavigationButton(
                     onPressed: (){
