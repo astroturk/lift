@@ -1,10 +1,17 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:lift/tabs/chats_tab.dart';
-import 'package:lift/tabs/create_workout_tab.dart';
-import 'package:lift/tabs/posts_tab.dart';
-import 'package:lift/tabs/profile_tab.dart';
-import 'package:lift/tabs/start_workout_tab.dart';
+import 'package:lift/constants/constants.dart';
+import 'package:lift/screens/home_screen/home_screen_helpers.dart';
+import 'package:lift/services/firebase_operations.dart';
+import 'package:lift/screens/home_screen/tabs/search_tab.dart';
+import 'package:lift/screens/home_screen/tabs/create_workout_tab.dart';
+import 'package:lift/screens/home_screen/tabs/posts_tab.dart';
+import 'package:lift/screens/home_screen/tabs/profile_tab.dart';
+import 'package:lift/screens/home_screen/tabs/start_workout_tab.dart';
+import 'package:lift/screens/home_screen/tabs/loading_tab.dart';
+import 'package:provider/provider.dart';
+import 'package:after_layout/after_layout.dart';
+import 'package:lift/services/workouts.dart';
 
 class HomeScreen extends StatefulWidget {
   static String id = 'home_screen';
@@ -14,18 +21,24 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  int _currentTab = 4;
+class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScreen> {
+
+  int _currentTab = 0;
   PageController _pageController = PageController();
   List<Widget> _screens = [
     CreateWorkoutTab(),
     StartWorkoutTab(),
     PostsTab(),
-    ChatsTab(),
+    SearchTab(),
     ProfileTab(),
   ];
-
   void _onPageChanged(int index) {}
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    Provider.of<HomeScreenHelpers>(context, listen: false).fetchProfileData(context);
+    Provider.of<Workouts>(context, listen: false).createNewWorkout(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,17 +51,16 @@ class _HomeScreenState extends State<HomeScreen> {
         physics: NeverScrollableScrollPhysics(),
       ),
       bottomNavigationBar: CurvedNavigationBar(
-        index: 2,
         color: Color(0xFF303030),
-        backgroundColor: Colors.black,
-        buttonBackgroundColor: Color(0xFF6531ff),
+        backgroundColor: Colors.transparent,
+        buttonBackgroundColor: SpecialPurple,
         height: 50.0,
         animationDuration: Duration(milliseconds: 300),
         items: <Widget>[
           Icon(Icons.add, size: 25, color: Colors.white,),
           Icon(Icons.timer, size: 25, color: Colors.white,),
           Icon(Icons.home, size: 25, color: Colors.white,),
-          Icon(Icons.chat_bubble, size: 25, color: Colors.white,),
+          Icon(Icons.search, size: 25, color: Colors.white,),
           Icon(Icons.account_circle, size: 25, color: Colors.white,),
         ],
         onTap: (index) {

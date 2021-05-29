@@ -13,7 +13,7 @@ class _PostsTabState extends State<PostsTab> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: Container(
-        child: Text('Posts Tab'),
+        child: Center(child: Text('Posts Tab')),
       ),
     );
   }

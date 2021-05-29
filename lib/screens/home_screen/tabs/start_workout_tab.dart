@@ -13,7 +13,7 @@ class _StartWorkoutTabState extends State<StartWorkoutTab> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: Container(
-        child: Text('Start Workout Tab'),
+        child: Center(child: Text('Start Workout Tab')),
       ),
     );
   }

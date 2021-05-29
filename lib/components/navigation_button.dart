@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lift/constants/constants.dart';
 
 class NavigationButton extends StatelessWidget {
   final onPressed;
@@ -11,7 +12,12 @@ class NavigationButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(Color(0xFF303030)),
+        backgroundColor: MaterialStateProperty.all(SpecialPurple.withOpacity(0.7)),
+        shape: MaterialStateProperty.all(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          )
+        ),
       ),
       onPressed: onPressed,
       child: Padding(
@@ -22,7 +28,7 @@ class NavigationButton extends StatelessWidget {
             fontFamily: 'Montserrat',
             fontWeight: FontWeight.w500,
             color: textColor,
-            fontSize: 20.0,
+            fontSize: 15.0,
           ),
         ),
       ),
