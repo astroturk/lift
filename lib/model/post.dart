@@ -7,6 +7,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:lift/constants/constants.dart';
 import 'package:lift/model/user.dart';
 import 'package:lift/screens/comments_screen/comments_screen.dart';
+import 'package:lift/screens/home_screen/home_screen_helpers.dart';
 import 'package:lift/services/authentication.dart';
 import 'package:provider/provider.dart';
 
@@ -148,12 +149,14 @@ class _PostState extends State<Post> {
         .collection('userWorkouts')
         .doc(workoutId)
         .update({'likes.$currentUser': false,});
+      removeLikeFromActivityFeed();
       setState(() {
         likeCount -= 1;
         isLiked = false;
         likes[currentUser] = false;
       });
     } else if(!_isLiked) {
+      addLikeToActivityFeed();
       FirebaseFirestore.instance.collection('workouts')
         .doc(ownerId)
         .collection('userWorkouts')
@@ -173,6 +176,42 @@ class _PostState extends State<Post> {
       });
     }
   }
+  
+  addLikeToActivityFeed(){
+    bool isNotPostOwner = (ownerId != Provider.of<Authentication>(context, listen: false).getUserUid);
+    if (isNotPostOwner){
+      FirebaseFirestore.instance.collection('feed')
+          .doc(ownerId)
+          .collection('feedItems')
+          .doc(workoutId)
+          .set({
+        "type": "like",
+        "username": Provider.of<HomeScreenHelpers>(context, listen: false).getUserName,
+        "userId": Provider.of<Authentication>(context, listen: false).getUserUid,
+        "userProfileImage": Provider.of<HomeScreenHelpers>(context, listen: false).getImage,
+        "workoutId": workoutId,
+        "ownerId": ownerId,
+        "thumbnailUrl":thumbnailUrl,
+        "timestamp": DateTime.now(),
+      });
+    }
+  }
+
+  removeLikeFromActivityFeed(){
+    bool isNotPostOwner = (ownerId != Provider.of<Authentication>(context, listen: false).getUserUid);
+    if (isNotPostOwner){
+      FirebaseFirestore.instance.collection('feed')
+        .doc(ownerId)
+        .collection('feedItems')
+        .doc(workoutId)
+        .get()
+        .then(
+            (doc){
+          if (doc.exists) {doc.reference.delete();}
+        });
+    }
+  }
+
 
   buildPostFooter() {
     return Container(

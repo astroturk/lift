@@ -44,7 +44,7 @@ class Workout{
       'title': title,
       'description': description,
       'completion_time': completionTime,
-      'time': Timestamp.now(),
+      'time': DateTime.now(),
       'likes': {},
     };
     return workoutData;

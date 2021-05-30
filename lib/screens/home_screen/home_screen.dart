@@ -2,13 +2,11 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:lift/constants/constants.dart';
 import 'package:lift/screens/home_screen/home_screen_helpers.dart';
-import 'package:lift/services/firebase_operations.dart';
+import 'package:lift/screens/home_screen/tabs/activity_feed_tab.dart';
 import 'package:lift/screens/home_screen/tabs/search_tab.dart';
 import 'package:lift/screens/home_screen/tabs/create_workout_tab.dart';
 import 'package:lift/screens/home_screen/tabs/posts_tab.dart';
 import 'package:lift/screens/home_screen/tabs/profile_tab.dart';
-import 'package:lift/screens/home_screen/tabs/start_workout_tab.dart';
-import 'package:lift/screens/home_screen/tabs/loading_tab.dart';
 import 'package:provider/provider.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:lift/services/workouts.dart';
@@ -27,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   PageController _pageController = PageController();
   List<Widget> _screens = [
     CreateWorkoutTab(),
-    StartWorkoutTab(),
+    ActivityFeedTab(),
     PostsTab(),
     SearchTab(),
     ProfileTab(),
@@ -58,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
         animationDuration: Duration(milliseconds: 300),
         items: <Widget>[
           Icon(Icons.add, size: 25, color: Colors.white,),
-          Icon(Icons.timer, size: 25, color: Colors.white,),
+          Icon(Icons.notifications_active, size: 25, color: Colors.white,),
           Icon(Icons.home, size: 25, color: Colors.white,),
           Icon(Icons.search, size: 25, color: Colors.white,),
           Icon(Icons.account_circle, size: 25, color: Colors.white,),

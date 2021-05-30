@@ -31,7 +31,6 @@ class _ProfileTabState extends State<ProfileTab> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
         centerTitle: true,
         title: Text(
           'LIFT',
@@ -85,12 +84,36 @@ class ProfileBody extends StatefulWidget {
 class _ProfileBodyState extends State<ProfileBody> {
   bool isLoading = false;
   int workoutCount = 0;
+  int followerCount = 0;
+  int followingCount = 0;
   List<Post> posts = [];
   String postOrientation = "Grid";
+
+  getFollowers() async {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('followers')
+        .doc(Provider.of<Authentication>(context, listen: false).getUserUid)
+        .collection('userFollowers')
+        .get();
+    setState(() {
+      followerCount = snapshot.docs.length;
+    });
+  }
+
+  getFollowing() async {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('following')
+        .doc(Provider.of<Authentication>(context, listen: false).getUserUid)
+        .collection('userFollowing')
+        .get();
+    setState(() {
+      followingCount = snapshot.docs.length;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    getFollowers();
+    getFollowing();
     getProfilePosts();
   }
 
@@ -99,7 +122,6 @@ class _ProfileBodyState extends State<ProfileBody> {
       isLoading = true;
     });
 
-    print(Provider.of<Authentication>(context, listen: false).getUserUid);
     QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('workouts')
       .doc(Provider.of<Authentication>(context, listen: false).getUserUid)
       .collection('userWorkouts')
@@ -110,7 +132,6 @@ class _ProfileBodyState extends State<ProfileBody> {
       workoutCount = snapshot.docs.length;
       posts = snapshot.docs.map((doc) => Post.fromDocument(doc.data())).toList();
     });
-    print(workoutCount);
   }
 
   buildProfilePosts() {
@@ -219,11 +240,11 @@ class _ProfileBodyState extends State<ProfileBody> {
                                   ),
                                   ProfileInfoCard(
                                     text: 'Following',
-                                    count: '0',
+                                    count: followingCount.toString(),
                                   ),
                                   ProfileInfoCard(
                                     text: 'Followers',
-                                    count: '0',
+                                    count: followerCount.toString(),
                                   ),
                                 ],
                               ),

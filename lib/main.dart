@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:lift/constants/constants.dart';
 import 'package:lift/screens/home_screen/home_screen.dart';
@@ -14,7 +15,7 @@ import 'screens/authentication_screen/authentication_screen.dart';
 import 'screens/registration_screen/registration_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:lift/screens/home_screen/home_screen_helpers.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

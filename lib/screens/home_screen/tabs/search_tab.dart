@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lift/components/form_input.dart';
 import 'package:lift/components/loading_container.dart';
 import 'package:lift/constants/constants.dart';
+import 'package:lift/screens/profile_screen/profile_screen.dart';
 
 class SearchTab extends StatefulWidget {
   const SearchTab({Key key}) : super(key: key);
@@ -17,9 +18,7 @@ class _SearchTabState extends State<SearchTab> {
 
   handleSearch(String query){
     try {
-      print(query);
-      Future<QuerySnapshot> users = FirebaseFirestore.instance.collection(
-          'users')
+      Future<QuerySnapshot> users = FirebaseFirestore.instance.collection('users')
           .where('user_full_name', isGreaterThanOrEqualTo: query).get();
       setState(() {
         searchResultsFuture = users;
@@ -44,6 +43,7 @@ class _SearchTabState extends State<SearchTab> {
                 userName: doc['user_name'],
                 fullName: doc['user_full_name'],
                 imageUrl: doc['user_image'],
+                userId: doc['user_uid'],
               ));
           });
           return Padding(
@@ -61,7 +61,6 @@ class _SearchTabState extends State<SearchTab> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         titleSpacing: 0,
         leading: IconButton(
           icon: Icon(
@@ -99,13 +98,22 @@ class UserSearchCard extends StatelessWidget {
   final String imageUrl;
   final String userName;
   final String fullName;
+  final String userId;
+  UserSearchCard({this.imageUrl, this.userName, this.fullName, this.userId});
 
-  UserSearchCard({this.imageUrl, this.userName, this.fullName});
+  showProfile(BuildContext context){
+    print(userId);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ProfileScreen(userId: userId,)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        print(fullName);
+        showProfile(context);
       },
       child: SizedBox(
         height: 80,
