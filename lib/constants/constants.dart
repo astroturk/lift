@@ -20,6 +20,13 @@ const TextStyle TextMediumPurple = TextStyle(
   color: SpecialPurple,
 );
 
+const TextStyle TextMediumWhite = TextStyle(
+  fontSize: 20.0,
+  fontFamily: 'Montserrat',
+  fontWeight: FontWeight.w500,
+  color: Colors.white,
+);
+
 const TextStyle TextSmallGreen = TextStyle(
   fontSize: 13.0,
   fontFamily: 'Montserrat',

@@ -25,6 +25,10 @@ dependencies:
   uuid: ^3.0.4
   animator: ^3.0.0
   timeago: ^3.0.2
+  palette_generator: ^0.3.0
+  circular_countdown_timer: ^0.2.0
+  cached_network_image: ^3.0.0
+  flutter_cache_manager: ^3.1.0
 
 dev_dependencies:
   flutter_test:

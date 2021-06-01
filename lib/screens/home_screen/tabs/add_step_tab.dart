@@ -254,7 +254,7 @@ class ImageSelectingInterface extends StatefulWidget {
 
 class _ImageSelectingInterfaceState extends State<ImageSelectingInterface> {
   dynamic stepImageDisplay(bool imageSelected){
-    if (!imageSelected) return AssetImage('images/default.png');
+    if (!imageSelected) return AssetImage('images/start.png');
     else return FileImage(Provider.of<Workouts>(context, listen: false).getStepImage);
   }
   @override
@@ -267,11 +267,12 @@ class _ImageSelectingInterfaceState extends State<ImageSelectingInterface> {
             flex: 3,
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Image(
-                image: stepImageDisplay(Provider.of<Workouts>(context).stepImageSelected),
+                color: SpecialDarkGrey,
+                borderRadius: BorderRadius.circular(2),
+                border: Border.all(color: Colors.white),
+                image: DecorationImage(
+                  image: stepImageDisplay(Provider.of<Workouts>(context).stepImageSelected),
+                ),
               ),
             ),
           ),
@@ -313,7 +314,7 @@ class ImageSelectionButton extends StatelessWidget {
         backgroundColor: MaterialStateProperty.all(SpecialPurple),
         shape: MaterialStateProperty.all(
           RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(8),
           )
         ),
       ),

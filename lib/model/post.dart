@@ -17,7 +17,10 @@ class Post extends StatefulWidget {
   final String username;
   final String description;
   final String thumbnailUrl;
+  final String title;
   final dynamic likes;
+  final dynamic saves;
+  final dynamic steps;
 
   Post ({
     this.workoutId,
@@ -25,7 +28,10 @@ class Post extends StatefulWidget {
     this.username,
     this.description,
     this.thumbnailUrl,
+    this.title,
     this.likes,
+    this.saves,
+    this.steps,
   });
 
   factory Post.fromDocument(dynamic doc) {
@@ -35,7 +41,10 @@ class Post extends StatefulWidget {
       username: doc['user_name'],
       description: doc['description'],
       thumbnailUrl: doc['thumbnail_url'],
+      title: doc['title'],
       likes: doc['likes'],
+      saves: doc['saves'],
+      steps: doc['steps_data'],
     );
   }
 
@@ -43,9 +52,7 @@ class Post extends StatefulWidget {
     if (likes == null) return 0;
     int count = 0;
     likes.values.forEach((val) {
-      if (val == true) {
-        count += 1;
-      }
+      if (val == true) {count += 1;}
     });
     return count;
   }
@@ -57,8 +64,11 @@ class Post extends StatefulWidget {
     username: this.username,
     description: this.description,
     thumbnailUrl: this.thumbnailUrl,
+    title: this.title,
     likes: this.likes,
     likeCount: getLikeCount(this.likes),
+    saves: this.saves,
+    steps: this.steps,
   );
 }
 
@@ -68,9 +78,13 @@ class _PostState extends State<Post> {
   final String username;
   final String description;
   final String thumbnailUrl;
+  final String title;
   Map likes;
+  Map saves;
+  dynamic steps;
   int likeCount;
   bool isLiked;
+  bool isSaved;
   bool showHeart = false;
 
   _PostState({
@@ -79,8 +93,11 @@ class _PostState extends State<Post> {
     this.username,
     this.description,
     this.thumbnailUrl,
+    this.title,
     this.likes,
-    this.likeCount
+    this.likeCount,
+    this.saves,
+    this.steps,
   });
 
   buildPostHeader() {
@@ -167,12 +184,60 @@ class _PostState extends State<Post> {
         isLiked = true;
         likes[currentUser] = true;
         showHeart = true;
-
       });
       Timer(Duration(milliseconds: 500), (){
         setState(() {
           showHeart= false;
         });
+      });
+    }
+  }
+
+  handleSavePost(){
+    String currentUser = Provider.of<Authentication>(context, listen: false).getUserUid;
+    bool _isSaved = saves[currentUser] == true;
+
+    print(workoutId);
+    if (!_isSaved) {
+      FirebaseFirestore.instance.collection('workouts')
+          .doc(ownerId)
+          .collection('userWorkouts')
+          .doc(workoutId)
+          .update({'saves.$currentUser': true,});
+      FirebaseFirestore.instance.collection('saved')
+          .doc(currentUser)
+          .collection('savedWorkouts')
+          .doc(workoutId)
+          .set({
+            'thumbnailUrl': thumbnailUrl,
+            'steps': steps,
+            'title': title,
+            'description': description,
+            'workoutId': workoutId,
+            'ownerId': ownerId,
+          });
+      setState(() {
+        isSaved = true;
+        saves[currentUser] = true;
+      });
+    }
+    else {
+      FirebaseFirestore.instance.collection('workouts')
+          .doc(ownerId)
+          .collection('userWorkouts')
+          .doc(workoutId)
+          .update({'saves.$currentUser': false,});
+      FirebaseFirestore.instance.collection('saved')
+          .doc(currentUser)
+          .collection('savedWorkouts')
+          .doc(workoutId)
+          .get()
+          .then((doc){
+            if (doc.exists) {doc.reference.delete();}
+          });
+      setState(() {
+        isSaved = false;
+        saves[currentUser] = false;
       });
     }
   }
@@ -205,8 +270,7 @@ class _PostState extends State<Post> {
         .collection('feedItems')
         .doc(workoutId)
         .get()
-        .then(
-            (doc){
+        .then((doc){
           if (doc.exists) {doc.reference.delete();}
         });
     }
@@ -219,32 +283,47 @@ class _PostState extends State<Post> {
       child: Column(
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Padding(
-                padding: EdgeInsets.only(top: 10, left: 10),
-                child: GestureDetector(
-                  onTap: () => handleLikePost(),
-                  child: Icon(
-                    isLiked ? Icons.favorite : Icons.favorite_border,
-                    size: 28,
-                    color: Colors.pink,
+              Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, left: 10),
+                    child: GestureDetector(
+                      onTap: () => handleLikePost(),
+                      child: Icon(
+                        isLiked ? Icons.favorite : Icons.favorite_border,
+                        size: 28,
+                        color: Colors.pink,
+                      ),
+                    ),
                   ),
-                ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, left: 10),
+                    child: GestureDetector(
+                      onTap: () => showComments(
+                        context,
+                        workoutId: workoutId,
+                        ownerId: ownerId,
+                        thumbnailUrl: thumbnailUrl,
+                      ),
+                      child: Icon(
+                        Icons.chat,
+                        size: 28,
+                        color: Colors.blue[900],
+                      ),
+                    ),
+                  ),
+                ],
               ),
               Padding(
-                padding: EdgeInsets.only(top: 10, left: 10),
+                padding: EdgeInsets.only(top: 10, right: 10),
                 child: GestureDetector(
-                  onTap: () => showComments(
-                    context,
-                    workoutId: workoutId,
-                    ownerId: ownerId,
-                    thumbnailUrl: thumbnailUrl,
-                  ),
+                  onTap: () => handleSavePost(),
                   child: Icon(
-                    Icons.chat,
+                    isSaved ? Icons.bookmark : Icons.bookmark_border,
                     size: 28,
-                    color: Colors.blue[900],
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -262,23 +341,33 @@ class _PostState extends State<Post> {
               )
             ],
           ),
-          SizedBox(
-            height: 5,
+          Divider(
+            indent: 10,
+            endIndent: 10,
+            thickness: 2,
+            color: Colors.white12,
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(width: 10,),
-              Container(
-                child: Text(
-                  '$description',
-                  style: TextSmallWhite,
-                ),
-              )
-            ],
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            width: MediaQuery.of(context).size.width,
+            child: Text(
+              '$title',
+              style: TextSmallWhite.copyWith(fontSize: 16),
+            ),
           ),
           SizedBox(
-            height: 20,
+            height: 7,
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            width: MediaQuery.of(context).size.width,
+            child: Text(
+              '$description',
+              style: TextSmallWhite.copyWith(color: Colors.white70),
+            ),
+          ),
+          SizedBox(
+            height: 40,
           )
         ],
       ),
@@ -288,6 +377,7 @@ class _PostState extends State<Post> {
   @override
   Widget build(BuildContext context) {
     isLiked = (likes[Provider.of<Authentication>(context, listen: false).getUserUid] == true);
+    isSaved = (saves[Provider.of<Authentication>(context, listen: false).getUserUid] == true);
 
     return Column(
       mainAxisSize: MainAxisSize.min,

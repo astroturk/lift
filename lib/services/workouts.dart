@@ -46,6 +46,7 @@ class Workout{
       'completion_time': completionTime,
       'time': DateTime.now(),
       'likes': {},
+      'saves': {},
     };
     return workoutData;
   }
@@ -131,13 +132,9 @@ class Workouts extends ChangeNotifier{
     print(currentWorkout.data(context));
     try {
       FirebaseFirestore.instance.collection('workouts')
-          .doc(Provider
-          .of<Authentication>(context, listen: false)
-          .getUserUid)
+          .doc(Provider.of<Authentication>(context, listen: false).getUserUid)
           .collection('userWorkouts')
-          .doc(Provider
-          .of<CreateWorkoutUtils>(context, listen: false)
-          .getWorkoutId)
+          .doc(Provider.of<CreateWorkoutUtils>(context, listen: false).getWorkoutId)
           .set(currentWorkout.data(context));
       print('Workout Information Stored');
       Provider.of<Workouts>(context, listen: false).createNewWorkout(context);

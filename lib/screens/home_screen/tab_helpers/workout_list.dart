@@ -18,18 +18,18 @@ class _WorkoutListState extends State<WorkoutList> {
   List <Widget> workoutSteps(List<WorkoutStep> steps, BuildContext context){
     List <Widget> stepCards = [
       ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(8)),
+        borderRadius: BorderRadius.all(Radius.circular(2)),
         child: ExpansionTile(
           initiallyExpanded: false,
           title: Text(
             'Workout Panel',
-            style: TextMediumGreen.copyWith(fontSize: 17),
+            style: TextMediumWhite.copyWith(fontSize: 17),
           ),
           backgroundColor: SpecialGrey,
           collapsedBackgroundColor: SpecialGrey,
           children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -133,34 +133,37 @@ class WorkoutInformationCard extends StatefulWidget {
 }
 
 class _WorkoutInformationCardState extends State<WorkoutInformationCard> {
-  Widget getThumbnailPhoto(bool thumbnailState) {
-    if (thumbnailState) return Image(image: NetworkImage(Provider.of<CreateWorkoutUtils>(context, listen: false).getThumbnailUrl),);
-    else return Image.asset('images/default.png');
+  getThumbnailPhoto(bool thumbnailState) {
+    if (thumbnailState) return NetworkImage(Provider.of<CreateWorkoutUtils>(context, listen: false).getThumbnailUrl);
+    else return AssetImage('images/default_thumbnail.png');
   }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 150,
+      height: 140,
       child: Container(
         decoration: BoxDecoration(
           color: SpecialGrey,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(2),
         ),
         child: Row(
           children: [
             Container(
-              width: 150,
-              padding: EdgeInsets.all(10),
+              width: 140,
               color: Colors.transparent,
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
+                  color: SpecialDarkGrey,
+                  border: Border.all(color: Colors.white),
+                  borderRadius: BorderRadius.circular(2),
+                  image: DecorationImage(
+                    image: getThumbnailPhoto(Provider.of<CreateWorkoutUtils>(context).getThumbnailUrl != ''),
+                  )
                 ),
-                child: getThumbnailPhoto(Provider.of<CreateWorkoutUtils>(context).getThumbnailUrl != ''),
               ),
             ),
+            SizedBox(width: 10,),
             Expanded(
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 10),
@@ -179,20 +182,16 @@ class _WorkoutInformationCardState extends State<WorkoutInformationCard> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    SizedBox(
-                      height: 2,
-                      child: Container(
-                        color: Colors.white,
-                      ),
+                    Divider(
+                      height: 20,
+                      thickness: 1,
+                      color: Colors.white,
                     ),
                     Expanded(
                       flex: 5,
                       child: SingleChildScrollView(
                         child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 3, horizontal: 5),
+                          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
                           child: Text(
                             Provider.of<CreateWorkoutUtils>(context).getDescription,
                             style: TextSmallWhite,
@@ -224,7 +223,7 @@ class ImageSelectingInterface extends StatefulWidget {
 
 class _ImageSelectingInterfaceState extends State<ImageSelectingInterface> {
   dynamic thumbnailDisplay(bool imageSelected){
-    if (!imageSelected) return AssetImage('images/default.png');
+    if (!imageSelected) return AssetImage('images/default_thumbnail.png');
     else return NetworkImage(Provider.of<CreateWorkoutUtils>(context, listen: false).thumbnailUrl);
   }
   @override
@@ -237,12 +236,13 @@ class _ImageSelectingInterfaceState extends State<ImageSelectingInterface> {
             flex: 3,
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Image(
-                image: thumbnailDisplay(Provider.of<CreateWorkoutUtils>(context).thumbnailSelected),
-              ),
+                color: SpecialDarkGrey,
+                borderRadius: BorderRadius.all(Radius.circular(2)),
+                border: Border.all(color: Colors.white),
+                image: DecorationImage(
+                  image: thumbnailDisplay(Provider.of<CreateWorkoutUtils>(context).thumbnailSelected),
+                )
+              )
             ),
           ),
           SizedBox(
@@ -283,26 +283,29 @@ class ImageSelectionButton extends StatelessWidget {
           backgroundColor: MaterialStateProperty.all(SpecialPurple),
           shape: MaterialStateProperty.all(
               RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: BorderRadius.circular(8),
               )
           ),
         ),
         onPressed: onPressed,
-        child: Row(
-          children: [
-            Icon(
-              icon,
-              color: Colors.white,
-              size: 20,
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              text,
-              style: TextButtonWhite.copyWith(fontSize: 17),
-            ),
-          ],
+        child: Container(
+          height: 40,
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                color: Colors.white,
+                size: 20,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                text,
+                style: TextButtonWhite.copyWith(fontSize: 17),
+              ),
+            ],
+          ),
         )
     );
   }
@@ -334,33 +337,25 @@ class StepCard extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             color: SpecialDarkGrey,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(2),
           ),
           child: Row(
             children: [
-              Expanded(
-                child: Container(
-                  height: 120,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.white,
-                  ),
-                  padding: EdgeInsets.all(5),
-                  child: Image(
+              Container(
+                height: 120,
+                width: 120,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(2),
+                  border: Border.all(color: Colors.white),
+                  color: SpecialDarkGrey,
+                  image: DecorationImage(
                     image: NetworkImage(step.imageUrl),
                   ),
                 ),
               ),
               Expanded(
-                flex: 3,
                 child: Container(
-                  decoration: BoxDecoration(
-                    color: SpecialDarkGrey,
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(8),
-                      bottomRight: Radius.circular(8),
-                    )
-                  ),
+                  color: SpecialDarkGrey,
                   child: Row(
                     children: [
                       SizedBox(

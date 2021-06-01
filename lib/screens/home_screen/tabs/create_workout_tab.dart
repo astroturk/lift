@@ -17,10 +17,6 @@ class CreateWorkoutTab extends StatefulWidget {
 
 class _CreateWorkoutTabState extends State<CreateWorkoutTab> {
   bool isUploading = false;
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,11 +35,11 @@ class _CreateWorkoutTabState extends State<CreateWorkoutTab> {
         ),
         actions: [
           IconButton(
-              icon: Icon(Icons.refresh),
-              iconSize: 25,
-              onPressed: () {
-                Provider.of<Workouts>(context, listen: false).createNewWorkout(context);
-              },
+            icon: Icon(Icons.refresh),
+            iconSize: 25,
+            onPressed: () {
+              Provider.of<Workouts>(context, listen: false).createNewWorkout(context);
+            },
           ),
         ],
       ),
@@ -56,22 +52,16 @@ class _CreateWorkoutTabState extends State<CreateWorkoutTab> {
               Expanded(
                   child: bodyCurrent(Provider.of<HomeScreenHelpers>(context).profileDataFetched),
               ),
-              SizedBox(
-                height: 10,
-              ),
+              SizedBox(height: 10,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    width: 10,
-                  ),
+                  SizedBox(width: 10,),
                   CreateWorkoutButton(
                     onPressed: (){Navigator.pushNamed(context, AddStepTab.id);},
                     text: 'Add',
                   ),
-                  SizedBox(
-                    width: 10,
-                  ),
+                  SizedBox(width: 10,),
                   CreateWorkoutButton(
                     onPressed: isUploading ? (){} : (){
                       setState(() {

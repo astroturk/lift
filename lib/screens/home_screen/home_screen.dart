@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lift/constants/constants.dart';
 import 'package:lift/screens/home_screen/home_screen_helpers.dart';
 import 'package:lift/screens/home_screen/tabs/activity_feed_tab.dart';
+import 'package:lift/screens/home_screen/tabs/saved_workouts_tab.dart';
 import 'package:lift/screens/home_screen/tabs/search_tab.dart';
 import 'package:lift/screens/home_screen/tabs/create_workout_tab.dart';
 import 'package:lift/screens/home_screen/tabs/posts_tab.dart';
@@ -26,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
   List<Widget> _screens = [
     CreateWorkoutTab(),
     ActivityFeedTab(),
-    PostsTab(),
+    SavedWorkoutsTab(),
     SearchTab(),
     ProfileTab(),
   ];
@@ -57,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
         items: <Widget>[
           Icon(Icons.add, size: 25, color: Colors.white,),
           Icon(Icons.notifications_active, size: 25, color: Colors.white,),
-          Icon(Icons.home, size: 25, color: Colors.white,),
+          Icon(Icons.bookmark, size: 25, color: Colors.white,),
           Icon(Icons.search, size: 25, color: Colors.white,),
           Icon(Icons.account_circle, size: 25, color: Colors.white,),
         ],

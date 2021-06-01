@@ -1,8 +1,12 @@
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:lift/constants/constants.dart';
 import 'package:lift/screens/home_screen/home_screen.dart';
 import 'package:lift/screens/registration_screen/registration_utils.dart';
+import 'package:lift/screens/workout_screens/end_screen.dart';
+import 'package:lift/screens/workout_screens/repetition_screen.dart';
+import 'package:lift/screens/workout_screens/rest_screen.dart';
+import 'package:lift/screens/workout_screens/timed_screen.dart';
+import 'package:lift/screens/workout_screens/workout_helpers.dart';
 import 'package:lift/services/authentication.dart';
 import 'package:lift/services/firebase_operations.dart';
 import 'package:lift/services/workouts.dart';
@@ -15,7 +19,6 @@ import 'screens/authentication_screen/authentication_screen.dart';
 import 'screens/registration_screen/registration_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:lift/screens/home_screen/home_screen_helpers.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,9 +47,14 @@ class MyApp extends StatelessWidget {
           RegistrationScreen.id: (context) => RegistrationScreen(),
           HomeScreen.id: (context) => HomeScreen(),
           AddStepTab.id: (context) => AddStepTab(),
+          RestScreen.id: (context) => RestScreen(),
+          RepetitionScreen.id: (context) => RepetitionScreen(),
+          TimedScreen.id: (context) => TimedScreen(),
+          EndScreen.id: (context) => EndScreen(),
         },
       ),
       providers: [
+        ChangeNotifierProvider(create: (_) => WorkoutHelpers()),
         ChangeNotifierProvider(create: (_) => AddStepHelper()),
         ChangeNotifierProvider(create: (_) => CreateWorkoutUtils()),
         ChangeNotifierProvider(create: (_) => HomeScreenHelpers()),
